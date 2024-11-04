@@ -22,7 +22,7 @@ class SplashScreen extends StatelessWidget {
               duration: Duration(seconds: 3),
               curve: Curves.elasticOut,
               child: Image.asset(
-                'assets/images/logo.jpg', // Ganti dengan logo keyboard Anda
+                'assets/logo.jpg', // Ganti dengan logo keyboard Anda
                 width: 150,
                 height: 150,
               ),

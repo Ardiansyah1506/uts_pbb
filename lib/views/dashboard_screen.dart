@@ -15,28 +15,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
       name: "Keyboard Mechanical Falcon",
       description:
           "Keyboard mekanik dengan switch biru yang memberikan feedback taktil. Cocok untuk mengetik dan gaming.",
-      imageUrl: "assets/images/1.jpg",
+      imageUrl: "assets/1.jpg",
       price: 350000,
     ),
     Product(
       name: "Keyboard Mechanical Thunder Pro",
       description:
           "Keyboard mekanik dengan lampu RGB yang dapat disesuaikan. Dibuat dari bahan aluminium untuk daya tahan tinggi.",
-      imageUrl: "assets/images/2.png",
+      imageUrl: "assets/2.png",
       price: 450000,
     ),
     Product(
       name: "Keyboard Mechanical DragonFire",
       description:
           "Dilengkapi dengan switch merah untuk pengalaman mengetik yang halus dan responsif, ideal untuk gamer.",
-      imageUrl: "assets/images/3.png",
+      imageUrl: "assets/3.png",
       price: 400000,
     ),
     Product(
       name: "Keyboard Mechanical Nitro-X",
       description:
           "Keyboard mekanik full-size dengan anti-ghosting untuk semua tombol. Nyaman untuk sesi bermain yang panjang.",
-      imageUrl: "assets/images/4.jpg",
+      imageUrl: "assets/4.jpg",
       price: 420000,
     ),
   ];

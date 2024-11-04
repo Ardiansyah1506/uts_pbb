@@ -13,22 +13,18 @@ dependencies:
   shared_preferences: ^2.3.2
   url_launcher: ^6.1.5  
 
-
-flutter_launch_icons: 
-    flutter_icons:
-    android: true
-    ios: true
-    image_path: "assets/images/logo.jpg"  # Ganti dengan path ikon kamu
-  # or latest version
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.10.0  # Add the correct package and version
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/logo.jpg"  # Replace with your icon path
 
 flutter:
   uses-material-design: true
-
-
   assets:
-  - asssets/images/
+    - assets/ # Corrected 'asssets' to 'assets'
