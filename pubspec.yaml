@@ -1,0 +1,34 @@
+name: uts_pbb
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.5.3
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  shared_preferences: ^2.3.2
+  url_launcher: ^6.1.5  
+
+
+flutter_launch_icons: 
+    flutter_icons:
+    android: true
+    ios: true
+    image_path: "assets/images/logo.jpg"  # Ganti dengan path ikon kamu
+  # or latest version
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+
+
+  assets:
+  - asssets/images/
