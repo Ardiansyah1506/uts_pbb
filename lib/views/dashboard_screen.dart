@@ -44,6 +44,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final Map<Product, int> cart = {};
   final TextEditingController paymentController = TextEditingController();
   final TextEditingController newPasswordController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController amountController = TextEditingController();
 
   void _addToCart(Product product) {
     setState(() {
@@ -71,11 +74,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   void _showUpdatePasswordDialog() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> usernames = prefs.getStringList('usernames') ??
-        []; // Retrieve the list of usernames
-    String selectedUsername = usernames.isNotEmpty
-        ? usernames.first
-        : ''; // Set the default selected username
+    List<String> usernames = prefs.getStringList('usernames') ?? [];
+    String selectedUsername = usernames.isNotEmpty ? usernames.first : '';
 
     showDialog(
       context: context,
@@ -118,7 +118,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 TextButton(
                   onPressed: () async {
-                    // Update the password for the selected username
                     await prefs.setString('$selectedUsername-password',
                         newPasswordController.text);
                     Navigator.of(context).pop();
@@ -186,8 +185,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                controller: paymentController,
-                decoration: InputDecoration(labelText: "Metode Pembayaran"),
+                controller: nameController,
+                decoration: InputDecoration(labelText: "Nama"),
+              ),
+              TextField(
+                controller: phoneController,
+                decoration: InputDecoration(labelText: "No HP"),
+              ),
+              TextField(
+                controller: amountController,
+                decoration: InputDecoration(labelText: "Jumlah Bayar"),
+                keyboardType: TextInputType.number,
               ),
               SizedBox(height: 10),
               Text("Total: Rp ${_calculateTotal()}"),
@@ -219,12 +227,35 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void _completePayment() {
-    setState(() {
-      cart.clear();
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Pembayaran Berhasil!")),
-    );
+    int totalAmount = _calculateTotal();
+    int amountPaid = int.tryParse(amountController.text) ?? 0;
+
+    if (amountPaid < totalAmount) {
+      int shortfall = totalAmount - amountPaid;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+              "Pembayaran Anda kurang! Total: Rp $totalAmount, Jumlah Bayar: Rp $amountPaid, Kekurangan: Rp $shortfall"),
+        ),
+      );
+    } else {
+      int change = amountPaid - totalAmount;
+      String name = nameController.text;
+      String phone = phoneController.text;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+              "Pembayaran Berhasil! Nota:\nNama: $name\nNo HP: $phone\nTotal: Rp $totalAmount\nJumlah Bayar: Rp $amountPaid\nJumlah Kembalian: Rp $change"),
+        ),
+      );
+      setState(() {
+        cart.clear();
+        nameController.clear();
+        phoneController.clear();
+        amountController.clear();
+      });
+    }
   }
 
   @override
@@ -302,29 +333,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     products[index].name,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Text(
-                    'Rp ${products[index].price}',
-                    style: TextStyle(
-                      color: Colors.green,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  child: Text("Rp ${products[index].price}"),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
-                    onPressed: () {
-                      _addToCart(products[index]);
-                    },
-                    child: Text("Tambah Keranjang"),
+                    onPressed: () => _addToCart(products[index]),
+                    child: Text("Add to Cart"),
                   ),
                 ),
               ],
@@ -332,32 +352,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
           );
         },
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Total items: ${cart.values.fold<int>(0, (sum, quantity) => sum + quantity)}",
-                style: TextStyle(fontSize: 18),
-              ),
-              Row(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.shopping_cart),
-                    onPressed: _showCartDialog,
-                  ),
-                  ElevatedButton(
-                    onPressed: _showPaymentDialog,
-                    child: Text("Bayar Sekarang"),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showCartDialog(),
+        child: Icon(Icons.shopping_cart),
       ),
+      persistentFooterButtons: [
+        ElevatedButton(
+          onPressed: () => _showPaymentDialog(),
+          child: Text("Bayar"),
+        ),
+      ],
     );
   }
 }
